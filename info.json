@@ -1,0 +1,11 @@
+{
+  "name": "logistic-signals",
+  "title": "Logistic Signals",
+  "version": "0.0.1",
+  "author": "Sil3ntStorm",
+  "contact": "",
+  "homepage": "https://github.com/Sil3ntStorm/logistic-signals",
+  "factorio_version": "0.17",
+  "dependencies": ["base >= 0.17"],
+  "description": "Provides signals about unfulfilled logistic requests in a network."
+}
