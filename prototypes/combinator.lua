@@ -1,3 +1,7 @@
+-- Copyright 2019 Sil3ntStorm https://github.com/Sil3ntStorm
+--
+-- Licensed under MS-RL, see https://opensource.org/licenses/MS-RL
+
 local entity = table.deepcopy(data.raw["constant-combinator"]["constant-combinator"]);
 entity.name = "sil-unfulfilled-requests-combinator";
 entity.icons = {{
