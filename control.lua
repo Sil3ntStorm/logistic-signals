@@ -7,14 +7,14 @@ if not global.logistic_signals then
 end
 
 local function onEntityCreated(event)
-    if (event.created_entity.name == "sil-unfulfilled-requests-combinator") then
+    if (event.created_entity.name == "sil-unfulfilled-requests-combinator" or event.created_entity.name == "sil-player-requests-combinator") then
         event.created_entity.operable = false;
         table.insert(global.logistic_signals, event.created_entity);
     end
 end
 
 local function onEntityDeleted(event)
-    if (event.entity.name == "sil-unfulfilled-requests-combinator") then
+    if (event.entity.name == "sil-unfulfilled-requests-combinator" or event.entity.name == "sil-player-requests-combinator") then
         for i = #global.logistic_signals, 1, -1 do
             if (global.logistic_signals[i].unit_number == event.entity.unit_number) then
                 table.remove(global.logistic_signals, i);
@@ -38,7 +38,7 @@ script.on_event(defines.events.on_tick, function(event)
             if (network ~= nil) then
                 -- more useless indentation levels (LUA sux)
                 for _, req in pairs(network.requesters) do
-                    if (req.type ~= "character") then
+                    if ((req.type ~= "character" and obj.name == "sil-unfulfilled-requests-combinator") or (req.type == "character" and obj.name == "sil-player-requests-combinator")) then
                         local log_point = req.get_logistic_point(defines.logistic_member_index.logistic_container);
                         if (log_point and log_point.valid and (log_point.mode == defines.logistic_mode.buffer or log_point.mode == defines.logistic_mode.requester)) then
                             for i = 1, req.request_slot_count do

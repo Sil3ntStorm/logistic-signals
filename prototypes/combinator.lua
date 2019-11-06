@@ -23,4 +23,26 @@ recipe.result = entity.name;
 
 data:extend{entity, item, recipe};
 
-table.insert(data.raw["technology"]["circuit-network"].effects, { type = "unlock-recipe", recipe = recipe.name});
+table.insert(data.raw["technology"]["circuit-network"].effects, { type = "unlock-recipe", recipe = recipe.name });
+
+local playerComb = table.deepcopy(data.raw["constant-combinator"]["sil-unfulfilled-requests-combinator"]);
+playerComb.name = "sil-player-requests-combinator";
+playerComb.icons = {{
+    icon = data.raw["constant-combinator"]["constant-combinator"].icon,
+    tint = {r = 0.113, g = 0.888, b = 0.106, a = 0.85}
+}}
+playerComb.minable.result = playerComb.name;
+playerComb.operable = false;
+
+local pcItem = table.deepcopy(data.raw.item["sil-unfulfilled-requests-combinator"]);
+pcItem.name = playerComb.name;
+pcItem.icons = playerComb.icons;
+pcItem.place_result = playerComb.name;
+
+local pcRepice = table.deepcopy(data.raw.recipe["sil-unfulfilled-requests-combinator"]);
+pcRepice.name = playerComb.name;
+pcRepice.result = playerComb.name;
+
+data:extend{playerComb, pcItem, pcRepice};
+
+table.insert(data.raw["technology"]["circuit-network"].effects, { type = "unlock-recipe", recipe = pcRepice.name });
