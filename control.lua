@@ -15,8 +15,8 @@ end
 
 local function onEntityDeleted(event)
     if (event.entity.name == "sil-unfulfilled-requests-combinator" or event.entity.name == "sil-player-requests-combinator") then
-        for i = #global.logistic_signals, 1, -1 do
-            if (global.logistic_signals[i].unit_number == event.entity.unit_number) then
+        for i in global.logistic_signals do
+            if (i.unit_number == event.entity.unit_number) then
                 table.remove(global.logistic_signals, i);
             end
         end
