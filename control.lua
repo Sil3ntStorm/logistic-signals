@@ -1,4 +1,4 @@
--- Copyright 2019 Sil3ntStorm https://github.com/Sil3ntStorm
+-- Copyright 2020 Sil3ntStorm https://github.com/Sil3ntStorm
 --
 -- Licensed under MS-RL, see https://opensource.org/licenses/MS-RL
 
@@ -34,7 +34,7 @@ script.on_event(defines.events.on_tick, function(event)
             -- useless level of indentation, because LUA is fkn stupid and does not have proper loop control statements
             local network = obj.force.find_logistic_network_by_position(obj.position, obj.surface);
             local requests = {};
-            local params = { parameters = {}};
+            local params = {};
             if (network ~= nil) then
                 -- more useless indentation levels (LUA sux)
                 for _, req in pairs(network.requesters) do
@@ -84,14 +84,11 @@ script.on_event(defines.events.on_tick, function(event)
                 local signalIndex = 1;
                 for k,v in pairs(requests) do
                     if (v > 0) then
-                        log("[Unfulfilled Requests] Requesting " .. v .. "x " .. k);
                         local slot = { signal = { type = "item", name = k}, count = v, index = signalIndex};
                         signalIndex = signalIndex + 1;
-                        table.insert(params.parameters, slot);
+                        table.insert(params, slot);
                     end
                 end
-            else
-                log("No network for " .. obj.unit_number .. " of " .. obj.type);
             end -- network != nil
             obj.get_or_create_control_behavior().parameters = params;
         end -- the entity is valid -> LUA is stupid (level needed due to lack of loop control statements)
