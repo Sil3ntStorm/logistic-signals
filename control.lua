@@ -100,7 +100,7 @@ script.on_event({defines.events.on_pre_player_mined_item, defines.events.on_robo
 script.on_event({defines.events.on_built_entity, defines.events.on_robot_built_entity}, onEntityCreated);
 
 script.on_event(defines.events.on_tick, function(event)
-    if (event.tick % 20 > 0) then
+    if (event.tick % 30 > 0) then
         return;
     end
 
