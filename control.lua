@@ -86,8 +86,13 @@ local function processCombinator(obj)
         end
     end -- requesters
     local signalIndex = 1;
+    local MAX_VALUE = 2147483647; -- ((2 ^ 32 - 1) << 1) >> 1;
     for k,v in pairs(requests) do
         if (v > 0) then
+            if (v > MAX_VALUE) then
+                log('Value for ' .. k .. ' (' .. v .. ') exceeds 32 bit limit, clamping');
+                v = MAX_VALUE;
+            end
             local slot = { signal = { type = "item", name = k}, count = v, index = signalIndex};
             signalIndex = signalIndex + 1;
             table.insert(params, slot);
