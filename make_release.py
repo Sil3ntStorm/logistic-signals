@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import json, sys, subprocess
+import json, subprocess
 
 data = {}
 with open('info.json', 'r', encoding='utf-8') as f:
