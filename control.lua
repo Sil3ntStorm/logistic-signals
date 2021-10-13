@@ -107,6 +107,8 @@ local function processCombinator(obj)
             processRequests(req, requests);
         end
     end -- requesters
+    local maxSignalCount = obj.get_control_behavior().signals_count;
+    local ignored = 0;
     local signalIndex = 1;
     local MAX_VALUE = 2147483647; -- ((2 ^ 32 - 1) << 1) >> 1;
     for k,v in pairs(requests) do
@@ -116,9 +118,16 @@ local function processCombinator(obj)
                 v = MAX_VALUE;
             end
             local slot = { signal = { type = "item", name = k}, count = v, index = signalIndex};
-            signalIndex = signalIndex + 1;
-            table.insert(params, slot);
+            if (signalIndex <= maxSignalCount) then
+                signalIndex = signalIndex + 1;
+                table.insert(params, slot);
+            else
+                ignored = ignored + 1;
+            end
         end
+    end
+    if (ignored > 0) then
+        log('Ignored ' .. ignored .. ' requests, which exceed maximum number of requests');
     end
     obj.get_or_create_control_behavior().parameters = params;
 end
