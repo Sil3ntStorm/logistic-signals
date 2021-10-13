@@ -14,12 +14,24 @@ local function onEntityCreated(event)
 end
 
 local function onEntityDeleted(event)
-    if (event.entity.valid and (event.entity.name == "sil-unfulfilled-requests-combinator" or event.entity.name == "sil-player-requests-combinator")) then
+    if (not (event.entity and event.entity.valid)) then
+        log('onEntityDeleted called with an invalid entity');
+        return
+    end
+    -- grab the values and store them for the loop, as the game might remove the entity while the loop is still running
+    local destroyed_unit_number = event.entity.unit_number;
+    local destroyed_unit_name = event.entity.name;
+    local removed_from_tracking = false;
+    if (destroyed_unit_name == "sil-unfulfilled-requests-combinator" or destroyed_unit_name == "sil-player-requests-combinator") then
         for i = #global.logistic_signals, 1, -1 do
-            if (global.logistic_signals[i].unit_number == event.entity.unit_number) then
+            if (global.logistic_signals[i].unit_number == destroyed_unit_number) then
                 table.remove(global.logistic_signals, i);
+                removed_from_tracking = true;
             end
         end
+    end
+    if (not removed_from_tracking) then
+        log('onEntityDeleted called with an entity that was not tracked');
     end
 end
 
