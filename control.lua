@@ -34,13 +34,23 @@ local function processRequests(req, requests)
     for i = 1, req.request_slot_count do
         local stack = req.get_request_slot(i);
         if (stack ~= nil) then
-            local inv = req.get_inventory(defines.inventory.chest);
+            local invIndex = defines.inventory.chest;
+            if (req.type == 'spider-vehicle') then
+                invIndex = defines.inventory.spider_ammo;
+            end
+            local inv = req.get_inventory(invIndex);
             local curCount = 0;
             if (inv == nil) then
                 log("Failed to get inventory of " .. req.name .. " a " .. req.type);
             else
                 curCount = inv.get_item_count(stack.name);
             end
+            if (req.type == 'spider-vehicle') then
+                inv = req.get_inventory(defines.inventory.spider_trunk);
+                if (inv ~= nil) then
+                    curCount = curCount + inv.get_item_count(stack.name);
+                end -- has Spider Trunk
+            end -- is SpiderTron
             local needed = stack.count - curCount;
             if (needed > 0) then
                 if (requests[stack.name]) then
