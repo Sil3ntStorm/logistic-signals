@@ -21,17 +21,17 @@ local function onEntityDeleted(event)
     -- grab the values and store them for the loop, as the game might remove the entity while the loop is still running
     local destroyed_unit_number = event.entity.unit_number;
     local destroyed_unit_name = event.entity.name;
-    local removed_from_tracking = false;
     if (destroyed_unit_name == "sil-unfulfilled-requests-combinator" or destroyed_unit_name == "sil-player-requests-combinator") then
+        local removed_from_tracking = false;
         for i = #global.logistic_signals, 1, -1 do
-            if (global.logistic_signals[i].unit_number == destroyed_unit_number) then
+            if (not global.logistic_signals[i].valid or global.logistic_signals[i].unit_number == destroyed_unit_number) then
                 table.remove(global.logistic_signals, i);
                 removed_from_tracking = true;
             end
         end
-    end
-    if (not removed_from_tracking) then
-        log('onEntityDeleted called with an entity that was not tracked');
+        if (not removed_from_tracking) then
+            log('onEntityDeleted called with an entity that was not tracked');
+        end
     end
 end
 
@@ -86,6 +86,7 @@ local function processRequests(req, requests)
         if (requests[item]) then
             requests[item] = requests[item] - count;
         else
+            -- Delivery without the item being requested?!?
             requests[item] = 0 - count;
             log("This shouldn't happen!");
         end
