@@ -6,12 +6,6 @@ if not global.logistic_signals then
     global.logistic_signals = {};
 end
 
-local buffer_chests_enabled;
-
-local function load_settings()
-    buffer_chests_enabled = settings.global["sil-enable-buffer-chests"].value;
-end
-
 local function onEntityCreated(event)
     if (event.created_entity.valid and (event.created_entity.name == "sil-unfulfilled-requests-combinator" or event.created_entity.name == "sil-player-requests-combinator")) then
         event.created_entity.operable = false;
@@ -46,6 +40,7 @@ local function processRequests(req, requests)
     if (not (log_point and log_point.valid)) then
         return
     end
+    local buffer_chests_enabled = settings.global["sil-enable-buffer-chests"].value
     if (not ((log_point.mode == defines.logistic_mode.buffer and buffer_chests_enabled) or log_point.mode == defines.logistic_mode.requester)) then
         return
     end
@@ -99,10 +94,6 @@ local function processRequests(req, requests)
 end
 
 local function processCombinator(obj)
-    if(not buffer_chests_enabled) then
-        load_settings();
-    end
-
     if (not (obj and obj.valid)) then
         return;
     end
@@ -155,6 +146,3 @@ script.on_event(defines.events.on_tick, function(event)
     end
 end
 );
-
-script.on_load(load_settings);
-script.on_event(defines.events.on_runtime_mod_setting_changed, load_settings);
