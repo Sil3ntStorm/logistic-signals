@@ -88,7 +88,6 @@ local function processRequests(req, requests)
         else
             -- Delivery without the item being requested?!?
             requests[item] = 0 - count;
-            log("This shouldn't happen!");
         end
     end
 end
