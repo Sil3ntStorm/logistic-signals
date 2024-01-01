@@ -1,0 +1,73 @@
+---------------------------------------------------------------------------------------------------
+Version: 0.9.0
+Date: 2024-01-01
+
+  Features:
+    - Added a setting to change the player requests detector to just read all players on
+      its surface rather than only those players within its logistic network.
+---------------------------------------------------------------------------------------------------
+Version: 0.8.1149
+Date: 2021-12-22
+
+  Features:
+    - Added setting to allow skipping buffer chests when determining the outstanding requests
+      of a network.
+  Changes:
+    - Removed debug log spam
+---------------------------------------------------------------------------------------------------
+Version: 0.7.1149
+Date: 2021-12-22
+
+  Bugfixes:
+    - Fixed crash when handling removal of combinators
+---------------------------------------------------------------------------------------------------
+Version: 0.6.1142
+Date: 2021-10-13
+
+  Bugfixes:
+    - Workaround other mods adding item prototypes after initial data stage, causing a crash
+---------------------------------------------------------------------------------------------------
+Version: 0.5.1142
+Date: 2021-10-13
+
+  Features:
+    - Support reading Spidertron requests
+  Bugfixes:
+    - Fixed crash when handling removal of combinators
+---------------------------------------------------------------------------------------------------
+Version: 0.4.1125
+Date: 2021-02-21
+
+  Bugfixes:
+    - Fixed crash when a single network has outstanding requests of over 2.14 billion of
+      a single item
+---------------------------------------------------------------------------------------------------
+Version: 0.3.116
+Date: 2020-12-25
+
+  Changes:
+    - Reduced update frequency to every 30 ticks
+---------------------------------------------------------------------------------------------------
+Version: 0.2.116
+Date: 2020-12-24
+
+  Changes:
+    - Support Factorio 1.1
+---------------------------------------------------------------------------------------------------
+Version: 0.2.18
+Date: 2020-02-12
+
+  Changes:
+    - Support Factorio 0.18
+---------------------------------------------------------------------------------------------------
+Version: 0.0.2
+Date: 2019-11-06
+
+  Features:
+    - Added combinator to display player requests
+---------------------------------------------------------------------------------------------------
+Version: 0.0.1
+Date: 2019-11-05
+
+  Features:
+    - Add a combinator to read the requests in a network that are not currently serviced by bots
