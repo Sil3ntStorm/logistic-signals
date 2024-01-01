@@ -98,11 +98,46 @@ local function processCombinator(obj)
         return;
     end
     local network = obj.force.find_logistic_network_by_position(obj.position, obj.surface);
-    if (not (network)) then
+    local player_outside_network = settings.global['sil-player-request-map-wide'].value
+    if (not (network or player_outside_network)) then
+        if obj.name == "sil-player-requests-combinator" and not player_outside_network then
+            obj.get_or_create_control_behavior().parameters = {}
+        end
         return;
     end
     local requests = {};
     local params = {};
+    if not network then
+        -- Only grab the players globally
+        local signalIndex = 1
+        for _, plr in pairs(game.players) do
+            if (obj.name == "sil-player-requests-combinator" and plr and plr.valid and plr.connected and plr.character and plr.character.valid and plr.character_personal_logistic_requests_enabled and plr.surface.index == obj.surface.index) then
+                local main_inv = plr.character.get_inventory(defines.inventory.character_main)
+                local trash_inv = plr.character.get_inventory(defines.inventory.character_trash)
+                for _, log in pairs(plr.character.get_logistic_point()) do
+                    if (log.mode == defines.logistic_mode.active_provider and trash_inv) then
+                        for name, cnt in pairs(trash_inv.get_contents()) do
+                            local slot = { signal = { type = "item", name = name}, count = 0 - cnt, index = signalIndex};
+                            table.insert(params, slot);
+                            signalIndex = signalIndex + 1;
+                        end
+                    elseif (log.mode == defines.logistic_mode.requester and main_inv and log.filters) then
+                        for _, req in pairs(log.filters) do
+                            local want = req.count
+                            local have = main_inv.get_item_count(req.name)
+                            if (want > have) then
+                                local slot = { signal = { type = "item", name = req.name}, count = want - have, index = signalIndex};
+                                table.insert(params, slot);
+                                signalIndex = signalIndex + 1;
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        obj.get_or_create_control_behavior().parameters = params
+        return
+    end
     for _, req in pairs(network.requesters) do
         if ((req.type ~= "character" and obj.name == "sil-unfulfilled-requests-combinator") or (req.type == "character" and obj.name == "sil-player-requests-combinator")) then
             processRequests(req, requests);
@@ -136,13 +171,8 @@ end
 script.on_event({defines.events.on_pre_player_mined_item, defines.events.on_robot_pre_mined, defines.events.on_entity_died}, onEntityDeleted);
 script.on_event({defines.events.on_built_entity, defines.events.on_robot_built_entity}, onEntityCreated);
 
-script.on_event(defines.events.on_tick, function(event)
-    if (event.tick % 30 > 0) then
-        return;
-    end
-
+script.on_nth_tick(30, function(event)
     for _, obj in pairs(global.logistic_signals) do
         processCombinator(obj);
     end
-end
-);
+end);
